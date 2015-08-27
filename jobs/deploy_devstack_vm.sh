@@ -18,6 +18,9 @@ run_devstack (){
     run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && /home/ubuntu/bin/post_stack.sh" 5
 }
 
+# Loading OpenStack credentials
+DEVSTACK_SSH_KEY=/home/jenkins-slave/tools/keystonerc_admin
+
 set -e
 #UUID=$(python -c "import uuid; print uuid.uuid4().hex")
 export NAME="manila-devstack-$ZUUL_UUID"
