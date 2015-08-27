@@ -92,9 +92,8 @@ echo "Wait for answer on port 22 on devstack"
 wait_for_listening_port $DEVSTACK_FLOATING_IP 22 5 || { nova console-log "$NAME" ; exit 1; }
 sleep 5
 
-# Add 2 more interfaces after successful SSH
+# Add 1 more interface after successful SSH
 echo "Adding two more network interfaces to devstack VM"
-nova interface-attach --net-id "$NET_ID" "$NAME" || emit_error "Failed to attach interface"
 nova interface-attach --net-id "$NET_ID" "$NAME" || emit_error "Failed to attach interface"
 
 echo "Copy scripts to devstack VM"
