@@ -69,7 +69,7 @@ git config --global user.email "microsoft_manila_ci@microsoft.com"
 git config --global user.name "Microsoft Manila CI"
 
 # download the patch to be tested
-git pull --no-edit https://review.openstack.org/openstack/manila refs/changes/54/200154/11
+git pull --no-edit https://review.openstack.org/openstack/manila refs/changes/54/200154/23
 
 cd /home/ubuntu/devstack
 
