@@ -4,7 +4,7 @@ echo "Collecting logs"
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh"
 
 echo "Creating logs destination folder"
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "if [ ! -d /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET ]; then mkdir -p /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET; else rm -rf /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/*; fi"
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "if [ -z '$ZUUL_CHANGE' ] || [ -z '$ZUUL_PATCHSET' ]; then echo 'Missing parameters!'; exit 1; elif [ ! -d /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET ]; then mkdir -p /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET; else rm -rf /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/*; fi"
 
 echo "Downloading logs"
 scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/aggregate.tar.gz "aggregate-$NAME.tar.gz"
