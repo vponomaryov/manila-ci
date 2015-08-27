@@ -21,19 +21,19 @@ run_devstack (){
 set -e
 #UUID=$(python -c "import uuid; print uuid.uuid4().hex")
 export NAME="manila-devstack-$ZUUL_UUID"
-echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
-echo DEVSTACK_SSH_KEY=$DEVSTACK_SSH_KEY >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo DEVSTACK_SSH_KEY=$DEVSTACK_SSH_KEY >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 NET_ID=$(nova net-list | grep 'private' | awk '{print $2}')
-echo NET_ID=$NET_ID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo NET_ID=$NET_ID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP
 echo NAME=$NAME
 echo NET_ID=$NET_ID
 
 echo "Deploying devstack $NAME"
-nova boot --availability-zone manila --flavor manila.linux --image devstack-61 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
+nova boot --availability-zone manila --flavor manila.linux --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
 
 if [ $? -ne 0 ]
 then
@@ -64,18 +64,18 @@ do
     COUNT=$(($COUNT + 1))
 done
 
-echo FIXED_IP=$FIXED_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo FIXED_IP=$FIXED_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 DEVSTACK_FLOATING_IP=$(nova floating-ip-create public | awk '{print $4}' | sed '/^$/d' | tail -n 1 ) || echo "Failed to allocate floating IP"
 if [ -z "$DEVSTACK_FLOATING_IP" ]
 then
     exit 1
 fi
-echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 export VMID=`nova show $NAME | grep -w id | awk '{print $4}'`
 
-echo VM_ID=$VMID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo VM_ID=$VMID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 echo VM_ID=$VMID
 
 exec_with_retry 15 5 "nova floating-ip-associate $NAME $DEVSTACK_FLOATING_IP"
@@ -128,7 +128,7 @@ echo "Ensure configs are copied over"
 scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY /usr/local/src/manila-ci/devstack_vm/devstack/* ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/devstack
 
 ZUUL_SITE=`echo "$ZUUL_URL" |sed 's/.\{2\}$//'`
-echo ZUUL_SITE=$ZUUL_SITE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.txt
+echo ZUUL_SITE=$ZUUL_SITE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 # get locally the qcow2 windows image used by tempest (image is created with local.sh)
 echo "Downloading the images for devstack"
