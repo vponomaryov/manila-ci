@@ -19,10 +19,13 @@ run_devstack (){
 }
 
 # Loading OpenStack credentials
-DEVSTACK_SSH_KEY=/home/jenkins-slave/tools/keystonerc_admin
+source /home/jenkins-slave/tools/keystonerc_admin
+
+# Loading functions
+source /usr/local/src/manila-ci/jobs/utils.sh
 
 set -e
-#UUID=$(python -c "import uuid; print uuid.uuid4().hex")
+
 export NAME="manila-devstack-$ZUUL_UUID"
 echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
@@ -36,7 +39,7 @@ echo NAME=$NAME
 echo NET_ID=$NET_ID
 
 echo "Deploying devstack $NAME"
-nova boot --availability-zone manila --flavor manila.linux --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
+nova boot --availability-zone manila --flavor m1.large --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
 
 if [ $? -ne 0 ]
 then
