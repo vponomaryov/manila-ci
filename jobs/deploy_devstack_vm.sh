@@ -72,7 +72,7 @@ done
 
 echo FIXED_IP=$FIXED_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
-DEVSTACK_FLOATING_IP=$(nova floating-ip-create public | awk '{print $4}' | sed '/^$/d' | tail -n 1 ) || echo "Failed to allocate floating IP"
+DEVSTACK_FLOATING_IP=$(nova floating-ip-create public | awk '{print $2}' | sed '/^$/d' | tail -n 1 ) || echo "Failed to allocate floating IP"
 if [ -z "$DEVSTACK_FLOATING_IP" ]
 then
     exit 1
