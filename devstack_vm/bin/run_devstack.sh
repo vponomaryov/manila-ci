@@ -64,14 +64,7 @@ fi
 cd /home/ubuntu/devstack
 git pull
 
-MANILA_LOC="/home/ubuntu/manila"
-# Clean previous manila clone if any
-sudo rm -rf "$MANILA_LOC"
-
-cd /home/ubuntu/
-git clone https://github.com/openstack/manila
-
-cd /home/ubuntu/manila
+cd /opt/stack/manila
 git config --global user.email "microsoft_manila_ci@microsoft.com"
 git config --global user.name "Microsoft Manila CI"
 
