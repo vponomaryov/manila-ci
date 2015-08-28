@@ -51,7 +51,7 @@ if [ "$IS_DEBUG_JOB" != "yes" ]
     scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY $CONSOLE_LOG logs@logs.openstack.tld:/srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP/console.log.gz && rm -f $CONSOLE_LOG*
     
     echo "Extracting logs"
-    ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "tar -xzf /srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP/aggregate-logs.tar.gz -C /srv/logs/manila/debug/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP/"
+    ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "tar -xzf /srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP/aggregate-logs.tar.gz -C /srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP/"
     
     echo "Fixing permissions on all log files"
     ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "chmod a+rx -R /srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$TIMESTAMP"    
