@@ -1,5 +1,7 @@
 #!/bin/bash
 
+CONSOLE_LOG=/home/jenkins-slave/logs/console-log.$ZUUL_UUID.manila.log
+
 echo "Collecting logs"
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh"
 
@@ -18,12 +20,12 @@ if [ "$IS_DEBUG_JOB" != "yes" ]
     ls -lia `dirname $CONSOLE_LOG`
 
     echo "GZIP:"
-    gzip -9 -v $CONSOLE_LOG
+    gzip -v9 $CONSOLE_LOG
 
     echo "After gzip:"
     ls -lia `dirname $CONSOLE_LOG`
 
-    scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY $CONSOLE_LOG* logs@logs.openstack.tld:/srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/ && rm -f $CONSOLE_LOG*
+    scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY $CONSOLE_LOG.gz logs@logs.openstack.tld:/srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/ && rm -f $CONSOLE_LOG*
 
     echo "Extracting logs"
     ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld "tar -xzf /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/aggregate-logs.tar.gz -C /srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/"
