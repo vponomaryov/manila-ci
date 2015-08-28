@@ -23,13 +23,13 @@ iniset $TEMPEST_CONFIG identity admin_username admin
 iniset $TEMPEST_CONFIG identity admin_password Passw0rd
 iniset $TEMPEST_CONFIG identity admin_tenant_name admin
 
-iniset $TEMPEST_CONFIG share enable_protocols ["cifs"]
-iniset $TEMPEST_CONFIG share enable_ip_rules_for_protocols []
-iniset $TEMPEST_CONFIG share enable_user_rules_for_protocols ["cifs"]
-iniset $TEMPEST_CONFIG share enable_ro_access_level_for_protocols ["cifs"]
-iniset $TEMPEST_CONFIG share storage_protocol "CIFS"
-iniset $TEMPEST_CONFIG share image_with_share_tools "ws2012r2_kvm"
-iniset $TEMPEST_CONFIG share image_username "Admin"
+iniset $TEMPEST_CONFIG share enable_protocols cifs
+iniset $TEMPEST_CONFIG share enable_ip_rules_for_protocols ""
+iniset $TEMPEST_CONFIG share enable_user_rules_for_protocols cifs
+iniset $TEMPEST_CONFIG share enable_ro_access_level_for_protocols cifs
+iniset $TEMPEST_CONFIG share storage_protocol CIFS
+iniset $TEMPEST_CONFIG share image_with_share_tools ws2012r2_kvm
+iniset $TEMPEST_CONFIG share image_username Admin
 iniset $TEMPEST_CONFIG share client_vm_flavor_ref 100
 
 public_id=`neutron net-list | grep public | awk '{print $2}'`
