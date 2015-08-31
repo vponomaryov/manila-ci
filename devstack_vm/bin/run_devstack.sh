@@ -1,10 +1,6 @@
 #!/bin/bash
 
-set -x
-set -e
-sudo ifconfig eth1 promisc up
-
-function cherry_pick{
+function cherry_pick {
     commit=$1
     set +e
     git cherry-pick $commit
@@ -17,6 +13,11 @@ function cherry_pick{
 
     set -e
 }
+
+
+set -x
+set -e
+sudo ifconfig eth1 promisc up
 
 HOSTNAME=$(hostname)
 
