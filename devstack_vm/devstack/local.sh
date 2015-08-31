@@ -47,6 +47,9 @@ gunzip -cd $IMAGE_PATH | glance image-create --name "ws2012r2_kvm" \
 set +e
 
 MANILA_SERVICE_SECGROUP="manila-service"
+
+nova secgroup-list-rules $MANILA_SERVICE_SECGROUP > /dev/null 2>&1 || nova secgroup-create $MANILA_SERVICE_SECGROUP $MANILA_SERVICE_SECGROUP
+
 nova secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 5985 5986 0.0.0.0/0
 
 set -e
