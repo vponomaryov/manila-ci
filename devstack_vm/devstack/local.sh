@@ -39,4 +39,6 @@ iniset $TEMPEST_CONFIG network public_network_id $public_id
 # iniset $TEMPEST_CONFIG network public_router_id $router_id
 
 IMAGE_PATH='/home/ubuntu/devstack/files/images/ws2012_r2_kvm_eval.qcow2.gz'
-gunzip -cd $IMAGE_PATH | glance image-create --name "ws2012r2_kvm" --container-format bare --disk-format qcow2
+gunzip -cd $IMAGE_PATH | glance image-create --name "ws2012r2_kvm" \
+                                             --container-format bare --disk-format qcow2 \
+                                             --is-public=True --is-protected=False
