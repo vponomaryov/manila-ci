@@ -29,6 +29,8 @@ set -e
 export NAME="manila-devstack-$ZUUL_UUID"
 echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
+echo JOB_TYPE=$JOB_TYPE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
+
 echo DEVSTACK_SSH_KEY=$DEVSTACK_SSH_KEY >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 NET_ID=$(nova net-list | grep 'private' | awk '{print $2}')
