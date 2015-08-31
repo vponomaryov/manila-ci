@@ -4,6 +4,20 @@ set -x
 set -e
 sudo ifconfig eth1 promisc up
 
+function cherry_pick{
+    commit=$1
+    set +e
+    git cherry-pick $commit
+
+    if [ $? -ne 0 ]
+    then
+        echo "Ignoring failed git cherry-pick $commit"
+        git checkout --force
+    fi
+
+    set -e
+}
+
 HOSTNAME=$(hostname)
 
 sudo sed -i '2i127.0.0.1  '$HOSTNAME'' /etc/hosts
@@ -70,7 +84,8 @@ git config --global user.name "Microsoft Manila CI"
 
 # Apply the patch implementing the Windows SMB driver.
 # TODO: remove this after it merges
-git fetch https://plucian@review.openstack.org/openstack/manila refs/changes/54/200154/24 && git cherry-pick FETCH_HEAD
+git fetch https://plucian@review.openstack.org/openstack/manila refs/changes/54/200154/24
+cherry_pick FETCH_HEAD
 
 cd /home/ubuntu/devstack
 
