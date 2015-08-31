@@ -26,7 +26,7 @@ source /usr/local/src/manila-ci/jobs/utils.sh
 
 set -e
 
-export NAME="manila-devstack-$ZUUL_UUID"
+export NAME="manila-devstack-$ZUUL_UUID-$JOB_TYPE"
 echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 echo JOB_TYPE=$JOB_TYPE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
