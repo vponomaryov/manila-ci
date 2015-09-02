@@ -41,7 +41,7 @@ echo NAME=$NAME
 echo NET_ID=$NET_ID
 
 echo "Deploying devstack $NAME"
-nova boot --availability-zone manila --flavor manila.devstack --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
+nova boot --availability-zone manila --flavor manila.stack --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
 
 if [ $? -ne 0 ]
 then
