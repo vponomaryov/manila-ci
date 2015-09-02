@@ -2,6 +2,7 @@
 
 
 echo "Collecting logs"
+# TODO: collect Hyper-V Logs
 
 set -x
 

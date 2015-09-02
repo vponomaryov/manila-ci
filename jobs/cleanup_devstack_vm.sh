@@ -2,6 +2,14 @@
 
 source $KEYSTONERC
 
+# Loading OpenStack credentials
+source /home/jenkins-slave/tools/keystonerc_admin
+
+# Loading functions
+source /usr/local/src/manila-ci/jobs/utils.sh
+
+teardown_hyperv $WIN_USER $WIN_PASS $hyperv_node
+
 set +e
 
 if [ "$IS_DEBUG_JOB" != "yes" ]

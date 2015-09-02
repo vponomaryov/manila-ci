@@ -85,3 +85,24 @@ run_ps_cmd_with_retry () {
 
     run_wsmancmd_with_retry $HOST $USERNAME $PASSWORD "powershell $PS_EXEC_POLICY $CMD"
 }
+
+
+join_hyperv (){
+    set +e
+    WIN_USER=$1
+    WIN_PASS=$2
+    URL=$3
+
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "git clone https://github.com/cloudbase/manila-ci C:\Openstack"
+    set -e
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
+}
+
+teardown_hyperv () {
+    WIN_USER=$1
+    WIN_PASS=$2
+    URL=$3
+
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
+}
