@@ -14,6 +14,7 @@ function cherry_pick {
     set -e
 }
 
+sudo sh -c "echo '* * * * * root echo 3 > /proc/sys/vm/drop_caches' >> /etc/crontab"
 
 set -x
 set -e
