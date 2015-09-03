@@ -94,5 +94,8 @@ cd /home/ubuntu/devstack
 
 ./unstack.sh
 
+# Workaround for the Nova API versions mismatch issue.
+git revert 8349aff5abd26c63470b96e99ade0e8292a87e7a --no-edit
+
 set -o pipefail
 ./stack.sh 2>&1 | tee /opt/stack/logs/stack.sh.txt
