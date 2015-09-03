@@ -94,9 +94,10 @@ join_hyperv (){
     URL=$3
 
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "git clone https://github.com/cloudbase/manila-ci C:\Openstack"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned Remove-Item -Recurse -Force c:\Openstack\manila-ci"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "git clone https://github.com/cloudbase/manila-ci C:\Openstack\manila-ci"
     set -e
-    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
+    run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\manila-ci\HyperV\scripts\create-environment.ps1 -devstackIP $FIXED_IP"
 }
 
 teardown_hyperv () {
