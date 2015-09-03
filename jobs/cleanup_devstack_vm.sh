@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source $KEYSTONERC
+source /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 set +e
 
