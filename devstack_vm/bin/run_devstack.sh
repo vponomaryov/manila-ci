@@ -44,6 +44,7 @@ sudo easy_install -U pip
 # Update six to latest version
 sudo pip install -U six
 sudo pip install -U kombu
+sudo pip install -U networking-hyperv
 
 # Install PyWinrm for manila
 sudo pip install -U git+https://github.com/petrutlucian94/pywinrm
