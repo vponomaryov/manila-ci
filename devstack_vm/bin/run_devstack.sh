@@ -110,4 +110,6 @@ nova secgroup-list-rules $MANILA_SERVICE_SECGROUP || nova secgroup-create $MANIL
 echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
 nova secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 1 65535 0.0.0.0/0
 nova secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
+set +e
 nova secgroup-add-rule $MANILA_SERVICE_SECGROUP icmp -1 -1 0.0.0.0/0
+set -e
