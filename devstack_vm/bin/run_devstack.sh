@@ -99,3 +99,15 @@ git revert 8349aff5abd26c63470b96e99ade0e8292a87e7a --no-edit
 
 set -o pipefail
 ./stack.sh 2>&1 | tee /opt/stack/logs/stack.sh.txt
+
+source /home/ubuntu/keystonerc
+
+MANILA_SERVICE_SECGROUP="manila-service"
+echo "Checking / creating $MANILA_SERVICE_SECGROUP security group"
+
+nova secgroup-list-rules $MANILA_SERVICE_SECGROUP || nova secgroup-create $MANILA_SERVICE_SECGROUP $MANILA_SERVICE_SECGROUP
+
+echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
+nova secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 1 65535 0.0.0.0/0
+nova secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
+nova secgroup-add-rule $MANILA_SERVICE_SECGROUP icmp -1 -1 0.0.0.0/0
