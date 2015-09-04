@@ -84,11 +84,6 @@ cd /opt/stack/manila
 git config --global user.email "microsoft_manila_ci@microsoft.com"
 git config --global user.name "Microsoft Manila CI"
 
-# Apply the patch implementing the Windows SMB driver.
-# TODO: remove this after it merges
-git fetch https://plucian@review.openstack.org/openstack/manila refs/changes/54/200154/24
-cherry_pick FETCH_HEAD
-
 cd /home/ubuntu/devstack
 
 ./unstack.sh
