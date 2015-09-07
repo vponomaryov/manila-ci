@@ -71,7 +71,7 @@ function archive_tempest_files() {
 
 # Clean
 
-if [[ ! -z "$1" ]] && [[ $1 == "yes" ]]; then
+if [[ -z $1 ]] || [[ $1 != "yes" ]]; then
     pushd /home/ubuntu/devstack
     ./unstack.sh
     popd
