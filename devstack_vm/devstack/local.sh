@@ -46,5 +46,5 @@ echo "Adding the manila image to glance"
 # TODO: let devstack do this for us, making sure it's public
 IMAGE_PATH='/home/ubuntu/devstack/files/images/ws2012_r2_kvm_eval.vhd.gz'
 gunzip -cd $IMAGE_PATH | glance image-create --name "ws2012r2_kvm" \
-                                             --container-format bare --disk-format qcow2 \
+                                             --container-format bare --disk-format vhd \
                                              --visibility public --protected False --progress
