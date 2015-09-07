@@ -13,11 +13,11 @@ mkdir -p "$TEMPEST_DIR"
 
 # Checkout stable commit for tempest to avoid possible
 # incompatibilities for plugin stored in Manila repo.
-TEMPEST_COMMIT="489f5e62"  # 15 June, 2015
+TEMPEST_COMMIT="3b1bb9be3265f"  # 28 Aug, 2015
 git checkout $TEMPEST_COMMIT
 
 # Install Manila Tempest integration
-cp -r /opt/stack/manila/contrib/tempest/tempest/* $TEMPEST_BASE/tempest
+cp -r /opt/stack/manila/manila_tempest_tests/* $TEMPEST_BASE/tempest
 
 cd /opt/stack/tempest
 testr list-tests | grep share | grep -Ev "tempest.api.image|tempest.scenario" > "$RUN_TESTS_LIST" || echo "failed to generate list of tests"
