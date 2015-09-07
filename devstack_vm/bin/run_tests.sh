@@ -19,14 +19,16 @@ git checkout $TEMPEST_COMMIT
 # Install Manila Tempest integration
 cp -r /opt/stack/manila/manila_tempest_tests/* $TEMPEST_BASE/tempest
 
-cd /opt/stack/tempest
-testr list-tests | grep share | grep -Ev "tempest.api.image|tempest.scenario" > "$RUN_TESTS_LIST" || echo "failed to generate list of tests"
+testr list-tests | grep share | grep -Ev "tempest.api.image|tempest.scenario" > "$RUN_TESTS_LIST"
 
-testr run --subunit --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
-cat /home/ubuntu/tempest/subunit-output.log | /opt/stack/tempest/tools/colorizer.py > /home/ubuntu/tempest/tempest-output.log 2>&1
-# testr exits with status 0. colorizer.py actually sets correct exit status
-RET=$?
-cd /home/ubuntu/tempest/
-python /home/ubuntu/bin/subunit2html.py /home/ubuntu/tempest/subunit-output.log
-
-exit $RET
+if [[ $? -eq 0 ]]; then
+  testr run --subunit --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
+  cat /home/ubuntu/tempest/subunit-output.log | /opt/stack/tempest/tools/colorizer.py > /home/ubuntu/tempest/tempest-output.log 2>&1
+  RET=$?
+  cd /home/ubuntu/tempest/
+  python /home/ubuntu/bin/subunit2html.py /home/ubuntu/tempest/subunit-output.log
+  exit $RET
+else
+  echo "failed to generate list of tests"
+  exit 1
+fi
