@@ -137,7 +137,7 @@ function archive_hyperv_logs() {
 }
 
 # Clean
-if [[ $1 == "yes" ]]; then
+if [[ -z $1 ]] || [[ $1 != "yes" ]]; then
     pushd /home/ubuntu/devstack
     ./unstack.sh
     popd
