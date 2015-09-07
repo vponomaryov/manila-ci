@@ -138,9 +138,12 @@ function archive_hyperv_logs() {
 
 # Clean
 if [[ -z $1 ]] || [[ $1 != "yes" ]]; then
+    echo "no debug case. Param is: $1"
     pushd /home/ubuntu/devstack
     ./unstack.sh
     popd
+else
+    echo "skipped unstack since we activated debug."
 fi
 
 [ -d "$LOG_DST" ] && rm -rf "$LOG_DST"
