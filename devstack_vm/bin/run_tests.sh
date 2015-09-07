@@ -16,10 +16,7 @@ mkdir -p "$TEMPEST_DIR"
 TEMPEST_COMMIT="3b1bb9be3265f"  # 28 Aug, 2015
 git checkout $TEMPEST_COMMIT
 
-# Install Manila Tempest integration
-cp -r /opt/stack/manila/manila_tempest_tests/* $TEMPEST_BASE/tempest
-
-testr list-tests | grep share | grep -Ev "tempest.api.image|tempest.scenario" > "$RUN_TESTS_LIST"
+testr list-tests | grep "manila_tempest_tests.tests.api" > "$RUN_TESTS_LIST"
 
 if [[ $? -eq 0 ]]; then
   testr run --subunit --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
