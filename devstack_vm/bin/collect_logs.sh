@@ -7,6 +7,7 @@ DEVSTACK_LOGS="/opt/stack/logs/screen"
 DEVSTACK_BUILD_LOG="/opt/stack/logs/stack.sh.txt"
 TEMPEST_LOGS="/home/ubuntu/tempest"
 HYPERV_CONFIGS="/openstack/config"
+HYPERV_LOGS="/openstack/logs"
 
 LOG_DST="/home/ubuntu/aggregate"
 LOG_DST_DEVSTACK="$LOG_DST/devstack_logs"
