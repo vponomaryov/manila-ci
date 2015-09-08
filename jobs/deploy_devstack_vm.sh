@@ -91,7 +91,7 @@ exec_with_retry 15 5 "nova floating-ip-associate $NAME $DEVSTACK_FLOATING_IP"
 nova show "$NAME"
 
 echo "Wait for answer on port 22 on devstack"
-wait_for_listening_port $DEVSTACK_FLOATING_IP 40 30 || { nova console-log "$NAME" ; exit 1; }
+wait_for_listening_port $DEVSTACK_FLOATING_IP 22 30 || { nova console-log "$NAME" ; exit 1; }
 sleep 5
 
 # Add 1 more interface after successful SSH
