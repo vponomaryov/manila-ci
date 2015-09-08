@@ -26,7 +26,22 @@ source /usr/local/src/manila-ci/jobs/utils.sh
 
 set -e
 
-export NAME="manila-devstack-$ZUUL_UUID-$JOB_TYPE"
+NAME="mnl-dvs-$ZUUL_CHANGE-$ZUUL_PATCHSET"
+
+case "$JOB_TYPE" in
+         handled_share_servers)
+            NAME="$NAME-hs"
+            ;;
+        user_share_servers)
+            NAME="$NAME-us"
+            ;;
+esac
+
+if [[ ! -z $IS_DEBUG_JOB ]] && [[ $IS_DEBUG_JOB = "yes" ]]; then
+        NAME="$NAME-dbg"
+fi
+export NAME=$NAME
+
 echo NAME=$NAME > /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
 echo JOB_TYPE=$JOB_TYPE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
