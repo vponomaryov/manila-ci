@@ -11,7 +11,7 @@ nova --os-username manila --os-tenant-name service --os-password Passw0rd \
 echo "Adding security rules to the $MANILA_SERVICE_SECGROUP security group"
 nova --os-username manila --os-tenant-name service --os-password Passw0rd \
     secgroup-add-rule $MANILA_SERVICE_SECGROUP tcp 1 65535 0.0.0.0/0
-nova --os-username manila --os-tenant-name service --os-password Passw0rd
+nova --os-username manila --os-tenant-name service --os-password Passw0rd \
     secgroup-add-rule $MANILA_SERVICE_SECGROUP udp 1 65535 0.0.0.0/0
 
 nova --os-username manila --os-tenant-name service --os-password Passw0rd \
