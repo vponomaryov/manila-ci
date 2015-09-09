@@ -16,6 +16,8 @@ mkdir -p "$TEMPEST_DIR"
 TEMPEST_COMMIT="3b1bb9be3265f"  # 28 Aug, 2015
 git checkout $TEMPEST_COMMIT
 
+export OS_TEST_TIMEOUT=1800
+
 testr list-tests | grep "manila_tempest_tests.tests.api" > "$RUN_TESTS_LIST"
 
 if [[ $? -eq 0 ]]; then
