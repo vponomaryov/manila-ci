@@ -31,7 +31,7 @@ iniset $TEMPEST_CONFIG share enable_ip_rules_for_protocols ""
 iniset $TEMPEST_CONFIG share enable_user_rules_for_protocols cifs
 iniset $TEMPEST_CONFIG share enable_ro_access_level_for_protocols cifs
 iniset $TEMPEST_CONFIG share storage_protocol CIFS
-iniset $TEMPEST_CONFIG share image_with_share_tools ws2012r2_kvm
+iniset $TEMPEST_CONFIG share image_with_share_tools ws2012r2
 iniset $TEMPEST_CONFIG share image_username Admin
 iniset $TEMPEST_CONFIG share client_vm_flavor_ref 100
 iniset $TEMPEST_CONFIG share build_timeout 1800
@@ -42,9 +42,4 @@ iniset $TEMPEST_CONFIG network public_network_id $public_id
 # router_id=`neutron router-list | grep router | awk '{print $2}'
 # iniset $TEMPEST_CONFIG network public_router_id $router_id
 
-echo "Adding the manila image to glance"
-# TODO: let devstack do this for us, making sure it's public
-IMAGE_PATH='/home/ubuntu/devstack/files/images/ws2012_r2_kvm_eval.vhd.gz'
-gunzip -cd $IMAGE_PATH | glance image-create --name "ws2012r2_kvm" \
-                                             --container-format bare --disk-format vhd \
-                                             --visibility public --protected False --progress
+glance image-update --name "ws2012r2" --visibility public --protected False

@@ -152,11 +152,6 @@ scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DE
 ZUUL_SITE=`echo "$ZUUL_URL" |sed 's/.\{2\}$//'`
 echo ZUUL_SITE=$ZUUL_SITE >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
-# get locally the qcow2 windows image used by tempest (image is created with local.sh)
-echo "Downloading the images for devstack"
-run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "mkdir -p /home/ubuntu/devstack/files/images/"
-run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "wget http://dl.openstack.tld/ws2012_r2_kvm_eval.vhd.gz -O /home/ubuntu/devstack/files/images/ws2012_r2_kvm_eval.vhd.gz"
-
 # creating manila folder and cloning master
 run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "git clone git://git.openstack.org/openstack/manila.git /opt/stack/manila"
 
