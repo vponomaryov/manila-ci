@@ -19,10 +19,10 @@ git checkout $TEMPEST_COMMIT
 export OS_TEST_TIMEOUT=1800
 
 # TODO: run consistency group tests after we adapt our driver to support this feature (should be minimal changes)
-testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group > "$RUN_TESTS_LIST"
+testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group | grep -v security_services > "$RUN_TESTS_LIST"
 
 if [[ $? -eq 0 ]]; then
-  testr run --subunit --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
+  testr run --subunit --parallel --concurrency=2 --load-list=$RUN_TESTS_LIST | subunit-2to1 > /home/ubuntu/tempest/subunit-output.log 2>&1
   cat /home/ubuntu/tempest/subunit-output.log | /opt/stack/tempest/tools/colorizer.py > /home/ubuntu/tempest/tempest-output.log 2>&1
   RET=$?
   cd /home/ubuntu/tempest/
