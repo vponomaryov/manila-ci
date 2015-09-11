@@ -42,4 +42,5 @@ iniset $TEMPEST_CONFIG network public_network_id $public_id
 # router_id=`neutron router-list | grep router | awk '{print $2}'
 # iniset $TEMPEST_CONFIG network public_router_id $router_id
 
-glance image-update --name "ws2012r2" --visibility public --protected False
+MANILA_IMAGE_ID=$(glance image-list | grep "ws2012r2" | awk '{print $2}')
+glance image-update $MANILA_IMAGE_ID --visibility public --protected False
