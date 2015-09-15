@@ -5,19 +5,6 @@ function emit_error(){
     exit 1
 }
 
-run_devstack (){
-    # run devstack
-    echo "Checking nova console-log for errors before installing devstack"
-    nova console-log "$NAME"
-    echo ""
-    echo "Run stack.sh on devstack"
-    run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc; /home/ubuntu/bin/run_devstack.sh" 5
-
-    # run post_stack
-    echo "Run post_stack scripts on devstack"
-    run_ssh_cmd_with_retry ubuntu@$DEVSTACK_FLOATING_IP $DEVSTACK_SSH_KEY "source /home/ubuntu/keystonerc && /home/ubuntu/bin/post_stack.sh" 5
-}
-
 # Loading OpenStack credentials
 source /home/jenkins-slave/tools/keystonerc_admin
 
