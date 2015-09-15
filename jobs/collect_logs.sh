@@ -1,7 +1,8 @@
 #!/bin/bash
 
 echo "Collecting logs"
-# TODO: collect Hyper-V Logs
+
+source /usr/local/src/manila-ci/jobs/utils.sh
 
 set -x
 
@@ -14,19 +15,28 @@ if [ -z '$ZUUL_CHANGE' ] || [ -z '$ZUUL_PATCHSET' ]; then
     exit 1
 fi
 
-function ssh_cmd_logs_sv {
-    local CMD=$1
-    ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld $CMD
-}
-
-ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh $IS_DEBUG_JOB"
-
 if [ "$IS_DEBUG_JOB" != "yes" ];then
     LOG_ARCHIVE_DIR="/srv/logs/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$JOB_TYPE"
 else
     TIMESTAMP=$(date +%d-%m-%Y_%H-%M)
     LOG_ARCHIVE_DIR="/srv/logs/debug/manila/$ZUUL_CHANGE/$ZUUL_PATCHSET/$JOB_TYPE/$TIMESTAMP"
 fi
+
+function ssh_cmd_logs_sv {
+    local CMD=$1
+    ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY logs@logs.openstack.tld $CMD
+}
+
+function log_unsupported_branch {
+    echo "The Windows SMB Manila driver is supported only on OpenStack Liberty or later." > /tmp/results.txt
+    echo ZUUL_BRANCH=$ZUUL_BRANCH >> /tmp/results.txt
+    scp -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $LOGS_SSH_KEY /tmp/results.txt logs@logs.openstack.tld:$LOG_ARCHIVE_DIR/results.txt
+    rm /tmp/results.txt
+}
+
+ensure_branch_supported || log_unsupported_branch && exit 0
+
+ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh $IS_DEBUG_JOB"
 
 echo "Creating logs destination folder"
 ssh_cmd_logs_sv "if [ ! -d $LOG_ARCHIVE_DIR ]; then mkdir -p $LOG_ARCHIVE_DIR; else rm -rf $LOG_ARCHIVE_DIR/*; fi"

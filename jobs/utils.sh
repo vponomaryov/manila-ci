@@ -108,3 +108,12 @@ teardown_hyperv () {
 
     run_wsmancmd_with_retry $URL $WIN_USER $WIN_PASS "powershell -ExecutionPolicy RemoteSigned C:\OpenStack\devstack\scripts\teardown.ps1"
 }
+
+ensure_branch_supported () {
+    if [ $ZUUL_BRANCH = "stable/juno" ] || [ $ZUUL_BRANCH = "stable/kilo" ]
+    then
+        echo "The Windows SMB Manila driver is supported only on OpenStack Liberty or later."
+        echo ZUUL_BRANCH=$ZUUL_BRANCH
+        return 1
+    fi
+}
