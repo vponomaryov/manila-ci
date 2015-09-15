@@ -55,18 +55,41 @@ echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP
 echo NAME=$NAME
 echo NET_ID=$NET_ID
 
-echo "Deploying devstack $NAME"
-nova boot --availability-zone manila --flavor manila.stack --image devstack-62v3 --key-name default --security-groups devstack --nic net-id="$NET_ID" "$NAME" --poll
+if [[ $(nova list | grep $NAME) ]]
+then
+    echo "WARNING: Devstack VM $NAME already exists."
+    set +e
+    nova show "$NAME"
+    set -e
+fi
 
-if [ $? -ne 0 ]
+echo "Deploying devstack $NAME"
+date
+
+export VM_ID=$(nova boot --availability-zone manila \
+                         --flavor manila.stack \
+                         --image devstack-62v3 \
+                         --key-name default \
+                         --security-groups devstack \
+                         --nic net-id="$NET_ID" "$NAME" --poll | \
+               grep -w id | awk '{print $4}')
+
+if [[ -z $VM_ID ]]
 then
     echo "Failed to create devstack VM: $NAME"
     nova show "$NAME"
     exit 1
 fi
 
+nova show $VM_ID
+
+# We may remove the "VMID" export after we make sure it's not used in the Jenkins job scripts.
+export VMID=$VM_ID
+echo VM_ID=$VM_ID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
+echo VM_ID=$VM_ID
+
 echo "Fetching devstack VM fixed IP address"
-export FIXED_IP=$(nova show "$NAME" | grep "private network" | awk '{print $5}')
+export FIXED_IP=$(nova show "$VM_ID" | grep "private network" | awk '{print $5}')
 
 COUNT=0
 while [ -z "$FIXED_IP" ]
@@ -75,15 +98,15 @@ do
     then
         echo "Failed to get fixed IP"
         echo "nova show output:"
-        nova show "$NAME"
+        nova show $VM_ID
         echo "nova console-log output:"
-        nova console-log "$NAME"
+        nova console-log $VM_ID
         echo "neutron port-list output:"
         neutron port-list -D -c device_id -c fixed_ips | grep $VM_ID
         exit 1
     fi
     sleep 15
-    export FIXED_IP=$(nova show "$NAME" | grep "private network" | awk '{print $5}')
+    export FIXED_IP=$(nova show $VM_ID | grep "private network" | awk '{print $5}')
     COUNT=$(($COUNT + 1))
 done
 
@@ -96,22 +119,17 @@ then
 fi
 echo DEVSTACK_FLOATING_IP=$DEVSTACK_FLOATING_IP >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
 
-export VMID=`nova show $NAME | grep -w id | awk '{print $4}'`
+exec_with_retry 15 5 "nova floating-ip-associate $VM_ID $DEVSTACK_FLOATING_IP"
 
-echo VM_ID=$VMID >> /home/jenkins-slave/runs/devstack_params.$ZUUL_UUID.manila.txt
-echo VM_ID=$VMID
-
-exec_with_retry 15 5 "nova floating-ip-associate $NAME $DEVSTACK_FLOATING_IP"
-
-nova show "$NAME"
+nova show "$VM_ID"
 
 echo "Wait for answer on port 22 on devstack"
-wait_for_listening_port $DEVSTACK_FLOATING_IP 22 30 || { nova console-log "$NAME" ; exit 1; }
+wait_for_listening_port $DEVSTACK_FLOATING_IP 22 30 || { nova console-log "$VM_ID" ; exit 1; }
 sleep 5
 
 # Add 1 more interface after successful SSH
 echo "Adding two more network interfaces to devstack VM"
-nova interface-attach --net-id "$NET_ID" "$NAME" || emit_error "Failed to attach interface"
+nova interface-attach --net-id "$NET_ID" "$VM_ID" || emit_error "Failed to attach interface"
 
 echo "Copy scripts to devstack VM"
 scp -v -r -o "StrictHostKeyChecking no" -o "UserKnownHostsFile /dev/null" -i $DEVSTACK_SSH_KEY /usr/local/src/manila-ci/devstack_vm/* ubuntu@$DEVSTACK_FLOATING_IP:/home/ubuntu/
