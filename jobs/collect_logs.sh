@@ -34,7 +34,7 @@ function log_unsupported_branch {
     rm /tmp/results.txt
 }
 
-ensure_branch_supported || log_unsupported_branch && exit 0
+ensure_branch_supported || (log_unsupported_branch && exit 0)
 
 ssh -o "UserKnownHostsFile /dev/null" -o "StrictHostKeyChecking no" -i $DEVSTACK_SSH_KEY ubuntu@$DEVSTACK_FLOATING_IP "/home/ubuntu/bin/collect_logs.sh $IS_DEBUG_JOB"
 
