@@ -34,7 +34,7 @@ iniset $TEMPEST_CONFIG share storage_protocol CIFS
 iniset $TEMPEST_CONFIG share image_with_share_tools ws2012r2
 iniset $TEMPEST_CONFIG share image_username Admin
 iniset $TEMPEST_CONFIG share client_vm_flavor_ref 100
-iniset $TEMPEST_CONFIG share build_timeout 1800
+iniset $TEMPEST_CONFIG share build_timeout 2400
 
 public_id=`neutron net-list | grep public | awk '{print $2}'`
 iniset $TEMPEST_CONFIG network public_network_id $public_id

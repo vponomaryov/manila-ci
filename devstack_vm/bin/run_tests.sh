@@ -16,7 +16,7 @@ mkdir -p "$TEMPEST_DIR"
 TEMPEST_COMMIT="3b1bb9be3265f"  # 28 Aug, 2015
 git checkout $TEMPEST_COMMIT
 
-export OS_TEST_TIMEOUT=1800
+export OS_TEST_TIMEOUT=2400
 
 # TODO: run consistency group tests after we adapt our driver to support this feature (should be minimal changes)
 testr list-tests | grep "manila_tempest_tests.tests.api" | grep -v consistency_group | grep -v security_services > "$RUN_TESTS_LIST"
