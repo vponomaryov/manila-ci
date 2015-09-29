@@ -50,12 +50,15 @@ then
     set -e
 fi
 
+devstack_image="devstack-63v1"
+echo "Image used is: $devstack_image"
+
 echo "Deploying devstack $NAME"
 date
 
 export VM_ID=$(nova boot --availability-zone manila \
                          --flavor manila.stack \
-                         --image devstack-62v3 \
+                         --image $devstack_image \
                          --key-name default \
                          --security-groups devstack \
                          --nic net-id="$NET_ID" "$NAME" --poll | \
