@@ -52,8 +52,6 @@ sudo pip install -U git+https://github.com/petrutlucian94/pywinrm
 # Running an extra apt-get update
 sudo apt-get update --assume-yes
 
-# Ensure subunit is available
-sudo apt-get install subunit -y -o Debug::pkgProblemResolver=true -o Debug::Acquire::http=true -f
 set -e
 
 DEVSTACK_LOGS="/opt/stack/logs/screen"
