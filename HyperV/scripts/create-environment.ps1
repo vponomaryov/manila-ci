@@ -77,7 +77,7 @@ ExecRetry {
     GitClonePull "$buildDir\neutron" "https://github.com/openstack/neutron.git" $branchName
 }
 ExecRetry {
-    GitClonePull "$buildDir\networking-hyperv" "https://github.com/stackforge/networking-hyperv.git" "master"
+    GitClonePull "$buildDir\networking-hyperv" "https://github.com/openstack/networking-hyperv.git" "master"
 }
 
 $hasLogDir = Test-Path $openstackLogs
