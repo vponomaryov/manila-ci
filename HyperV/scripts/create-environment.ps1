@@ -79,6 +79,9 @@ ExecRetry {
 ExecRetry {
     GitClonePull "$buildDir\networking-hyperv" "https://github.com/openstack/networking-hyperv.git" "master"
 }
+ExecRetry {
+    GitClonePull "$buildDir\compute-hyperv" "https://github.com/openstack/compute-hyperv.git" $branchName
+}
 
 $hasLogDir = Test-Path $openstackLogs
 if ($hasLogDir -eq $false){
@@ -146,31 +149,31 @@ function cherry_pick($commit) {
 }
 
 ExecRetry {
-    #pushd C:\OpenStack\build\openstack\networking-hyperv
-    #& python setup.py install
-    & pip install -e C:\OpenStack\build\openstack\networking-hyperv
+    & pip install C:\OpenStack\build\openstack\networking-hyperv
     if ($LastExitCode) { Throw "Failed to install networking-hyperv from repo" }
     popd
 }
 
 ExecRetry {
-    #pushd C:\OpenStack\build\openstack\neutron
-    #& python setup.py install
-    pip install -e C:\OpenStack\build\openstack\neutron
+    & pip install C:\OpenStack\build\openstack\neutron
     if ($LastExitCode) { Throw "Failed to install neutron from repo" }
     popd
 }
 
 ExecRetry {
-    #pushd C:\OpenStack\build\openstack\nova
-    #& python setup.py install
     # 20 Aug # cherry-pick for Claudiu's fixed until they are merged
     pushd C:\OpenStack\build\openstack\nova
     git fetch https://review.openstack.org/openstack/nova refs/changes/20/213720/5
     cherry_pick FETCH_HEAD
     # end of cherry-pick
-    pip install -e C:\OpenStack\build\openstack\nova
+    & pip install C:\OpenStack\build\openstack\nova
     if ($LastExitCode) { Throw "Failed to install nova fom repo" }
+    popd
+}
+
+ExecRetry {
+    & pip install C:\OpenStack\build\openstack\compute-hyperv
+    if ($LastExitCode) { Throw "Failed to install compute-hyperv from repo" }
     popd
 }
 
